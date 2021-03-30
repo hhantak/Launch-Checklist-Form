@@ -36,50 +36,62 @@ form.addEventListener("submit", function(event) {
    let launchStatus = document.getElementById("launchStatus");
       //if the user leaves any space blank alerts user
       if (pilotName.value === "" || copilotName.value === "" || fuelLevel.value === "" || cargoMass.value === "") {
-         window.alert("All fields are required.");
+         alert("All fields are required.");
          event.preventDefault();
       //if fuel level input !== number alerts user
       } else if (isNaN(Number(fuelLevel.value))) {
-         window.alert("Fuel level must be a number");
+         alert("Fuel level must be a number");
          event.preventDefault();
       //if cargo mass input !== number alerts user
       } else if (isNaN(Number(cargoMass.value))){
-         window.alert("Cargo mass must be a number");
+         alert("Cargo mass must be a number");
+         event.preventDefault();
+      } else if (!isNaN(pilotName.value)) {
+         alert("Pilot Name can't be a number")
+         event.preventDefault();
+      }  else if (!isNaN(copilotName.value)) {
+         alert("Copilot name can't be a number")
          event.preventDefault();
       // ready for launch baby!!
       } else {
+         // pilotName = pilotName.value;
+         // copilotName = copilotName.value;
          fuelLevel = Number(fuelLevel.value);
          cargoMass = Number(cargoMass.value);
-         // update the pilot status upon receiving correct input and hitting the button.
          pilotStatus.innerHTML = `Pilot ${pilotName.value} is ready for launch.`;
          copilotStatus.innerHTML = `Co-pilot ${copilotName.value} is ready for launch`;
-         //triggers a warning Red text if fuel level input is < 10000
-         if (fuelLevel < 10000) {
+         // update the pilot status upon receiving correct input and hitting the button.
+        // both fail
+         if (fuelLevel < 10000 && cargoMass > 10000) {
             faultyItems.style.visibility = "visible";
             fuelStatus.innerHTML = "Fuel level too low for launch.";
-            launchStatus.innerHTML = "Shuttle not ready for launch.";
-            launchStatus.style.color = "red";
-            event.preventDefault();
-         }
-         //triggers a warning Red text if cargo mass input > 10000
-         if (cargoMass > 10000) {
-            faultyItems.style.visibility = "visible";
             cargoStatus.innerHTML = "Cargo mass is too great for launch.";
             launchStatus.innerHTML = "Shuttle not ready for launch.";
             launchStatus.style.color = "red";
-            event.preventDefault();
-         } 
-         //triggers ready for launch & changes text to lime green 
-         if (fuelLevel >= 10000 && cargoMass <= 10000) {
+         } // cargoMass fails, fuel passes: overall fail
+            else if (cargoMass > 10000 && fuelLevel >= 10000) {
             faultyItems.style.visibility = "visible";
+            fuelStatus.innerHTML = "Fuel level is ready for launch.";
+            cargoStatus.innerHTML = "Cargo mass is too great for launch.";
+            launchStatus.innerHTML = "Shuttle not ready for launch.";
+            launchStatus.style.color = "red";
+         } // cargoMass passes, fuel fails: overall fail
+            else if (cargoMass < 10000 && fuelLevel < 10000) {
+            faultyItems.style.visibility = "visible";
+            fuelStatus.innerHTML = "Fuel level is too low to launch.";
+            cargoStatus.innerHTML = "Cargo mass is ready for launch.";
+            launchStatus.innerHTML = "Shuttle not ready for launch.";
+            launchStatus.style.color = "red";
+         } // both pass: PASS
+            else if (cargoMass < 10000 && fuelLevel >= 10000) {
+            faultyItems.style.visibility = "visible";
+            fuelStatus.innerHTML = "Fuel level is good for launch.";
+            cargoStatus.innerHTML = "Cargo mass good for launch.";
             launchStatus.innerHTML = "Shuttle is ready for launch.";
             launchStatus.style.color = "limegreen";
-            event.preventDefault();
-         }
-
+         } 
          event.preventDefault();
-      }
-      event.preventDefault();
+      };
    });
 });
 
